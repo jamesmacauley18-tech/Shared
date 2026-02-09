@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>James to Khadijah - Valentine's Ultimate Test</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Georgia', serif; background: linear-gradient(135deg, #ff69b4 0%, #ff1493 50%, #c71585 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .container { background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); max-width: 600px; width: 100%; overflow: hidden; }
+        .header { background: linear-gradient(135deg, #ff1493 0%, #c71585 100%); color: white; padding: 60px 30px; text-align: center; }
+        .header h1 { font-size: 48px; margin-bottom: 10px; }
+        .content { padding: 40px 30px; }
+        .intro-message { font-size: 20px; color: #333; margin: 20px 0; }
+        .start-button { background: linear-gradient(135deg, #ff1493 0%, #c71585 100%); color: white; padding: 15px 40px; border-radius: 50px; border: none; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 5px 20px rgba(255,20,147,0.4); }
+        .start-button:hover { transform: scale(1.05); }
+        .puzzle-container { display: none; }
+        .puzzle-container.active { display: block; }
+        .riddle-card { background: linear-gradient(135deg, #fff0f5 0%, #ffe4e1 100%); border: 3px solid #ff1493; border-radius: 15px; padding: 30px; margin: 20px 0; }
+        .riddle-text { font-size: 20px; color: #333; line-height: 1.8; margin-bottom: 25px; }
+        .riddle-input-area { display: flex; flex-direction: column; gap: 10px; }
+        .riddle-input-area input, .riddle-input-area textarea { padding: 12px; font-size: 16px; border: 2px solid #ff1493; border-radius: 8px; font-family: 'Georgia', serif; }
+        .riddle-input-area button { background: linear-gradient(135deg, #ff1493 0%, #c71585 100%); color: white; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; }
+        .feedback { margin-top: 15px; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; display: none; }
+        .feedback.show { display: block; }
+        .feedback.correct { background: #90EE90; color: white; }
+        .feedback.incorrect { background: #FFB6C6; color: white; }
+        .progress-bar { width: 100%; height: 8px; background: #ddd; border-radius: 10px; margin: 30px 0; }
+        .progress { height: 100%; background: linear-gradient(90deg, #ff1493 0%, #c71585 100%); transition: width 0.5s; }
+        .assessment-section { display: none; }
+        .assessment-section.show { display: block; }
+        .assessment-box { background: linear-gradient(135deg, #fff0f5 0%, #ffe4e1 100%); border: 3px solid #ff1493; border-radius: 15px; padding: 30px; margin: 20px 0; }
+        .assessment-text { font-size: 18px; color: #333; line-height: 1.8; margin: 20px 0; }
+        .assessment-textarea { width: 100%; padding: 12px; font-size: 16px; border: 2px solid #ff1493; border-radius: 8px; font-family: 'Georgia', serif; min-height: 120px; margin: 15px 0; }
+        .assessment-button { background: linear-gradient(135deg, #ff1493 0%, #c71585 100%); color: white; padding: 12px 30px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; }
+        .verdict-section { display: none; padding: 30px; border-radius: 15px; text-align: center; }
+        .verdict-section.show { display: block; }
+        .verdict-passed { background: linear-gradient(135deg, #90EE90 0%, #32CD32 100%); border: 3px solid #228B22; }
+        .verdict-failed { background: linear-gradient(135deg, #FFB6C6 0%, #FF69B4 100%); border: 3px solid #c71585; }
+        .verdict-text { font-size: 24px; font-weight: bold; color: white; margin: 20px 0; }
+        .love-letter { background: linear-gradient(135deg, #fff5f7 0%, #fff0f5 100%); border: 2px solid #ff1493; border-radius: 10px; padding: 25px; margin: 25px 0; }
+        .letter-content { font-size: 14px; color: #333; line-height: 1.9; }
+        .letter-content p { margin: 12px 0; }
+        .input-area { margin-top: 20px; }
+        .input-area label { display: block; font-size: 16px; color: #c71585; font-weight: bold; margin-bottom: 10px; }
+        .input-area input { width: 100%; padding: 12px; font-size: 16px; border: 2px solid #ff1493; border-radius: 8px; margin-bottom: 10px; }
+        .submission-message { display: none; margin-top: 20px; padding: 15px; background: #90EE90; color: white; border-radius: 8px; }
+        .submission-message.show { display: block; }
+        .footer { background: #f8f8f8; padding: 30px; text-align: center; border-top: 3px solid #ff1493; }
+        .footer p { color: #666; font-size: 14px; margin: 5px 0; }
+    </style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>From James Ojukutu Macauley</h1>
+<p>To My Beloved Khadijah Mansaray</p>
+<p style="font-size: 14px; margin-top: 15px; font-style: italic;">A Mystery of True Love - The Final Test</p>
+</div>
+
+<div class="content">
+<div class="intro-section" id="introSection">
+<div class="intro-message"><p>🔐 My Dearest Khadijah... 🔐</p></div>
+<div class="intro-message"><p style="font-size: 16px;">I know I can't give you material treasures, but I want to give you something more valuable - a puzzle of my heart. But first, you must prove something to me... Solve these riddles, and then answer my most important question. Only then will you unlock my love. 💝</p></div>
+<button class="start-button" onclick="startPuzzle()">🔓 Begin the Mystery 🔓</button>
+</div>
+
+<div class="puzzle-container" id="puzzleContainer">
+<h2 style="color: #c71585; text-align: center;">🧩 Mystery Riddle Challenge 🧩</h2>
+<div style="font-size: 20px; color: #ff1493; margin: 20px 0; font-weight: bold; text-align: center;" id="riddleCounter">Riddle 1 of 5</div>
+
+<div class="riddle-card">
+<div class="riddle-text" id="riddleText"></div>
+<div class="riddle-input-area">
+<input type="text" id="riddleAnswer" placeholder="Type your answer..." onkeypress="if(event.key==='Enter')checkRiddleAnswer()">
+<button onclick="checkRiddleAnswer()">Submit Answer</button>
+</div>
+<div class="feedback" id="feedback"></div>
+</div>
+
+<div class="progress-bar">
+<div class="progress" id="progressBar" style="width: 0%"></div>
+</div>
+</div>
+
+<div class="assessment-section" id="assessmentSection">
+<div class="assessment-box">
+<h2 style="color: #c71585; text-align: center;">💭 The Most Important Question 💭</h2>
+<div class="assessment-text">
+<p style="font-size: 18px; margin: 20px 0;"><strong>Khadijah, I need you to answer this honestly and from your heart:</strong></p>
+<p style="font-size: 18px; color: #ff1493; margin: 20px 0;"><strong>"How will you manage and invest OUR TIME together? Will you prioritize me, make me feel important, and be fully present with me? Tell me the truth."</strong></p>
+<p style="font-size: 14px; color: #999; margin: 20px 0;">This is not a riddle with one word answer. I want to hear from your HEART. Be honest about how you value our time together.</p>
+</div>
+<textarea id="assessmentAnswer" placeholder="Answer from your heart, Khadijah. Tell me how you truly feel about us and our time together..."></textarea>
+<button class="assessment-button" onclick="submitAssessment()">💌 Submit Your Answer 💌</button>
+<div class="feedback" id="assessmentFeedback"></div>
+</div>
+
+<div class="verdict-section" id="verdictSection">
+<h2 id="verdictTitle" style="font-size: 28px; margin-bottom: 20px;"></h2>
+<div id="verdictMessage" style="font-size: 18px; color: white; line-height: 1.8;"></div>
+<button class="assessment-button" id="continueButton" style="margin-top: 20px; display: none;" onclick="continueToWish()">Continue 💕</button>
+</div>
+
+<div class="revealed-section" id="revealedSection" style="display: none;">
+<div class="revealed-message">
+<h2 style="color: #c71585; text-align: center;">🎉 Oh My Khadijah! 🎉</h2>
+<p style="font-size: 18px; margin: 20px 0; text-align: center;">You've passed every test and proven your love! ✨</p>
+
+<div class="love-letter">
+<div class="letter-content">
+<p><strong>My Dearest Khadijah Mansaray,</strong></p>
+<p>I'm writing to you with a heart full of emotions I sometimes struggle to express. As Valentine's Day approaches, I find myself wishing I could give you the world - the diamonds, the exotic trips, the expensive gestures that would make you feel like the queen you truly are.</p>
+<p>But the truth is, I don't have those things to give you. And it breaks my heart sometimes that my financial situation cannot match the depth of my love for you. I regret that I cannot express my adoration through material wealth. This weighs on me deeply, Khadijah.</p>
+<p>However, I've realized something profound: the greatest gift I can give you is my authentic, unwavering love. A love that doesn't depend on money. A love that's real, pure, and endless.</p>
+<p>Every time I see your smile, every moment we share, every word you speak - these are worth more than all the treasures in the world. You make me want to be a better man.</p>
+<p>Khadijah, you are my inspiration, my joy, my peace. When I'm with you, nothing else matters. You are my greatest treasure, and I am the richest man alive simply because you chose to love me.</p>
+<p>I promise you this: I will spend my life showing you that love transcends material possessions. I will be there for you in every way that matters. I will support your dreams, celebrate your victories, and stand by you through every challenge.</p>
+<p>Thank you for believing in me. Thank you for loving me unconditionally. Thank you for being my reason to hope.</p>
+<p style="margin-top: 20px;">I love you more than words could ever express. You are my forever.</p>
+<p style="margin-top: 20px;">Forever yours,<br><strong>James Ojukutu Macauley</strong><br>With all my heart ❤️</p>
+</div>
+</div>
+
+<p style="font-size: 18px; margin-top: 30px; color: #ff1493; text-align: center;"><strong>Now, my love... tell me</strong></p>
+<p style="text-align: center;">What is one thing I can do to make you feel loved and appreciated?</p>
+
+<div class="input-area">
+<label>Your Valentine's Wish for Me:</label>
+<input type="text" id="valentineInput" placeholder="Tell me what would make you happy... 💭" maxlength="300">
+<button class="assessment-button" onclick="submitValentineWish()">💌 Share Your Wish 💌</button>
+<div class="submission-message" id="submissionMessage">✨ Your wish has been received with all my love! ✨</div>
+</div>
+</div>
+</div>
+
+<div class="footer">
+<p><strong>James Ojukutu Macauley</strong></p>
+<p><strong>To</strong></p>
+<p><strong>Khadijah Mansaray</strong></p>
+<p>With All My Love This Valentine's Day 🌹</p>
+</div>
+</div>
+
+<script>
+const riddles = [
+{question: "I grow stronger when resisted, yet weaker when indulged. I have no voice, yet can move mountains. What am I?", answer: "love", hint: "What you feel in your heart"},
+{question: "I am the only thing that gets better the more you give me away. Kings and beggars both seek me. What am I?", answer: "time", hint: "Every moment we spend together"},
+{question: "What has cities but no houses, forests but no trees, and water but no fish?", answer: "map", hint: "Think of something that shows the world"},
+{question: "The more you take, the more you leave behind. What am I?", answer: "footsteps", hint: "Traces of a journey"},
+{question: "I have a heart that doesn't beat, a bed that never sleeps, and run but never walk. What am I?", answer: "river", hint: "Something natural and constant"}
+];
+
+let currentRiddleIndex = 0;
+let assessmentPassed = false;
+
+function startPuzzle() {
+document.getElementById('introSection').style.display = 'none';
+document.getElementById('puzzleContainer').classList.add('active');
+loadRiddle();
+}
+
+function loadRiddle() {
+const riddle = riddles[currentRiddleIndex];
+document.getElementById('riddleText').textContent = riddle.question;
+document.getElementById('riddleAnswer').value = '';
+document.getElementById('riddleAnswer').disabled = false;
+document.getElementById('feedback').textContent = '';
+document.getElementById('feedback').classList.remove('show', 'correct', 'incorrect');
+document.getElementById('riddleCounter').textContent = `Riddle ${currentRiddleIndex + 1} of 5`;
+updateProgressBar();
+document.getElementById('riddleAnswer').focus();
+}
+
+function checkRiddleAnswer() {
+const userAnswer = document.getElementById('riddleAnswer').value.trim().toLowerCase();
+const correctAnswer = riddles[currentRiddleIndex].answer.toLowerCase();
+const feedback = document.getElementById('feedback');
+
+if (!userAnswer) {
+feedback.textContent = '⚠️ Please enter an answer!';
+feedback.classList.add('show', 'incorrect');
+return;
+}
+
+if (userAnswer === correctAnswer) {
+feedback.textContent = '✅ Correct! 🎉';
+feedback.classList.add('show', 'correct');
+document.getElementById('riddleAnswer').disabled = true;
+
+setTimeout(() => {
+if (currentRiddleIndex < 4) {
+currentRiddleIndex++;
+loadRiddle();
+} else {
+document.getElementById('puzzleContainer').classList.remove('active');
+document.getElementById('assessmentSection').classList.add('show');
+}
+}, 2000);
+} else {
+feedback.textContent = '❌ Not quite. Try again!';
+feedback.classList.add('show', 'incorrect');
+}
+}
+
+function updateProgressBar() {
+const progress = ((currentRiddleIndex) / 5) * 100;
+document.getElementById('progressBar').style.width = progress + '%';
+}
+
+function submitAssessment() {
+const answer = document.getElementById('assessmentAnswer').value.trim();
+if (!answer || answer.length < 20) {
+alert('Khadijah, please give me a proper, thoughtful answer from your heart. 💕');
+return;
+}
+
+// Save her answer
+const data = {name: 'Khadijah', assessment: answer, time: new Date().toLocaleString()};
+localStorage.setItem('assessmentAnswer', JSON.stringify(data));
+console.log('📝 ASSESSMENT ANSWER RECEIVED:');
+console.log(answer);
+
+// Simulate evaluation - you decide if she passes
+const feedbackText = document.getElementById('assessmentFeedback');
+feedbackText.textContent = 'Your answer is being evaluated...';
+feedbackText.classList.add('show', 'incorrect');
+
+setTimeout(() => {
+// JAMES DECIDES: Change "true" to "false" if she failed
+const shePassedTheTest = true; // ← CHANGE THIS TO false IF SHE FAILED
+
+showVerdict(shePassedTheTest, answer);
+}, 2000);
+}
+
+function showVerdict(passed, answer) {
+document.getElementById('assessmentSection').style.display = 'none';
+document.getElementById('verdictSection').classList.add('show');
+
+const verdictTitle = document.getElementById('verdictTitle');
+const verdictMessage = document.getElementById('verdictMessage');
+const continueButton = document.getElementById('continueButton');
+
+if (passed) {
+assessmentPassed = true;
+document.getElementById('verdictSection').classList.add('verdict-passed');
+verdictTitle.textContent = '✨ YOU PASSED! ✨';
+verdictMessage.innerHTML = `<strong>Oh Khadijah!</strong><br><br>Your answer touched my heart deeply. You understand what truly matters - our TIME together, our connection, our presence with each other. You deserve me, and I deserve you.<br><br>You've proven that you value what matters most. I'm so proud of you, and I love you even more now. 💕`;
+continueButton.style.display = 'inline-block';
+} else {
+document.getElementById('verdictSection').classList.add('verdict-failed');
+verdictTitle.textContent = '❌ YOU FAILED ❌';
+verdictMessage.innerHTML = `<strong>Khadijah,</strong><br><br>I'm sorry, but your answer shows that you don't truly understand the importance of investing TIME in our relationship. You don't deserve me, and I deserve someone who will prioritize me, be fully present with me, and make me feel like I matter.<br><br>This is heartbreaking, but I cannot move forward with someone who won't give me the time and attention I deserve.<br><br>I wish you well. 💔`;
+}
+}
+
+function continueToWish() {
+document.getElementById('verdictSection').style.display = 'none';
+document.getElementById('revealedSection').style.display = 'block';
+document.getElementById('valentineInput').focus();
+}
+
+function submitValentineWish() {
+const wish = document.getElementById('valentineInput').value.trim();
+if (wish) {
+const data = {name: 'Khadijah', wish: wish, time: new Date().toLocaleString()};
+localStorage.setItem('valentineWish', JSON.stringify(data));
+console.log('🎉 VALENTINE WISH RECEIVED 🎉');
+console.log('Wish: ' + wish);
+document.getElementById('submissionMessage').classList.add('show');
+alert('✨ Your wish has been received! ✨');
+} else {
+alert('Please share your wish! 💕');
+}
+}
+</script>
+</body>
+</html>

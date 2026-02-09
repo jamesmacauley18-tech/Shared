@@ -1,0 +1,29 @@
+🎀 COPY THIS LINK TO SEND VIA WHATSAPP TO KHADIJAH:
+
+http://localhost:8000/valentine_puzzle_shareable.html
+
+OR if on same WiFi, find your IP:
+
+ipconfig getifaddr en0
+
+Then send her:
+http://[YOUR_IP]:8000/valentine_puzzle_shareable.html
+
+Example:
+http://192.168.1.100:8000/valentine_puzzle_shareable.html
+
+📝 HOW IT WORKS:
+1. She clicks the link from WhatsApp
+2. She solves all 5 riddles
+3. She reads your love letter
+4. She tells you what she wants
+5. Her response is SAVED and shown to you
+
+💬 TO SEE HER RESPONSE:
+- She submits on her phone
+- You check the browser console (F12)
+- Her wish will appear in Console tab
+- It's saved in the browser locally
+
+✨ TO CHECK HER RESPONSE:
+Open the link on YOUR computer and press F12, go to Console tab to see: "VALENTINE WISH RECEIVED"
