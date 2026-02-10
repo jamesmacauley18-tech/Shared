@@ -277,9 +277,14 @@
             box-shadow: 0 5px 15px rgba(255, 20, 147, 0.3);
         }
         
-        .riddle-input-area button:hover {
+        .riddle-input-area button:hover:not(:disabled) {
             transform: scale(1.05);
             box-shadow: 0 8px 20px rgba(255, 20, 147, 0.5);
+        }
+        
+        .riddle-input-area button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
         
         .feedback {
@@ -1063,11 +1068,17 @@
         }
         
         function startPuzzle() {
-            document.getElementById('introSection').classList.add('hidden');
-            document.getElementById('puzzleContainer').classList.add('active');
-            score = 0;
-            currentRiddleIndex = 0;
-            loadRiddle();
+            try {
+                document.getElementById('introSection').classList.add('hidden');
+                document.getElementById('puzzleContainer').classList.add('active');
+                score = 0;
+                currentRiddleIndex = 0;
+                loadRiddle();
+                console.log('Puzzle started successfully');
+            } catch(error) {
+                console.error('Error starting puzzle:', error);
+                alert('There was an error starting the puzzle. Please refresh the page and try again.');
+            }
         }
         
         function loadRiddle() {
@@ -1116,12 +1127,15 @@
                 if (currentRiddle.isTricky) {
                     feedback.textContent = '💕 I needed to hear that... You passed my test. I believe you... 💚';
                 } else {
-                    feedback.textContent = '✨ That's exactly how I feel about you too! 💕';
+                    feedback.textContent = '✨ That\'s exactly how I feel about you too! 💕';
                 }
                 feedback.classList.add('show', 'correct');
                 triggerCorrectAnimation();
                 document.getElementById('riddleAnswer').disabled = true;
-                document.querySelector('.riddle-input-area button').disabled = true;
+                const submitBtn = document.querySelector('.riddle-input-area button');
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                }
                 
                 setTimeout(() => {
                     if (currentRiddleIndex < riddles.length - 1) {
