@@ -839,22 +839,22 @@
             <!-- Introduction Section -->
             <div class="intro-section" id="introSection">
                 <div class="intro-message">
-                    <p>✨ A Message From My Heart ✨</p>
+                    <p>✨ A Test of True Love ✨</p>
                 </div>
                 <div class="intro-message">
-                    <p>My dearest love, I've created something special for you—a journey through riddles, each one a reflection of what I feel for you. With every answer you find, you're finding your way closer to my heart.</p>
+                    <p>My dearest love, before we go any further, I need to know the truth. I have some questions—deep, real, and sometimes tricky—that go straight to your heart. These questions will test if you truly love me for who I am, not for what I can give you.</p>
                 </div>
                 <div class="intro-message">
-                    <p>These aren't just riddles. They're my way of saying: I'm standing here, completely in love with you, waiting for your answers...</p>
+                    <p>Answer with complete honesty. This is my way of saying: I need to know I can trust you with my heart. Can you prove to me that your love is real? 💕</p>
                 </div>
                 <button class="start-button" onclick="startPuzzle()">
-                    💕 Begin This Journey 💕
+                    💕 Test My Heart 💕
                 </button>
             </div>
             
             <!-- Puzzle Section -->
             <div class="puzzle-container" id="puzzleContainer">
-                <div class="puzzle-title">🧩 Love's Riddles</div>
+                <div class="puzzle-title">💕 Questions From My Heart</div>
                 <div class="puzzle-message" id="riddleCounter">Question 1 of 5</div>
                 
                 <div class="riddle-card" id="riddleCard">
@@ -863,11 +863,11 @@
                         <input 
                             type="text" 
                             id="riddleAnswer" 
-                            placeholder="What's your answer...?"
+                            placeholder="Tell me the truth, please..."
                             onkeypress="handleKeyPress(event)"
                             autocomplete="off"
                         >
-                        <button onclick="checkRiddleAnswer()">Tell Me</button>
+                        <button onclick="checkRiddleAnswer()">Share Your Heart</button>
                     </div>
                     <div class="feedback" id="feedback"></div>
                 </div>
@@ -991,24 +991,36 @@
         
         const riddles = [
             {
-                question: "I'm always coming, but never arrive. I'm the thing you're always waiting for. What am I?",
-                answer: "tomorrow"
+                question: "Remember when we were together... those intimate moments we shared. Tell me, what was your favorite feeling when we were close—was it the tenderness, the passion, or the way you felt completely safe with me?",
+                answer: "tenderness|passion|safe|close|intimate|love|protected|secure|care|affection",
+                isPersonal: true,
+                acceptPartial: true
             },
             {
-                question: "I have a face and two hands, but no arms or legs. I tell you something important but never speak. What am I?",
-                answer: "clock"
+                question: "You told me you've been with older men in their 40s before. But here's the real test, my love—if I lost everything tomorrow, if I had no money, no status, nothing but my heart... would you still be here with me? Or was it always about what I could give you?",
+                answer: "yes|stay|still|always|money doesn't matter|i would|forever|love|you|heart",
+                isPersonal: true,
+                acceptPartial: true,
+                isTricky: true
             },
             {
-                question: "I get smaller every time I take a bath. I can be shaped into anything, but I melt in water. What am I?",
-                answer: "soap"
+                question: "When you look at me, what do you see that made you choose me over the older, wealthier men you've known? What's special about us, about what we have together?",
+                answer: "love|genuine|real|honest|true|future|connection|different|special|understand",
+                isPersonal: true,
+                acceptPartial: true
             },
             {
-                question: "I speak without a mouth and hear without ears. I have no body, but I come alive with wind. What am I?",
-                answer: "echo"
+                question: "This is a tricky one... if you had to choose between a comfortable life with someone who could give you everything but didn't truly love you, or a simple life with me building something real together—which would it be? And why?",
+                answer: "you|real|love|together|build|genuine|true|simple|happy|forever|us",
+                isPersonal: true,
+                acceptPartial: true,
+                isTricky: true
             },
             {
-                question: "The more you take, the more you leave behind. I show the path of your journey. What am I?",
-                answer: "footsteps"
+                question: "Tell me something deep about how our time together has changed you. What do you love most about us—about me—that has nothing to do with money or material things?",
+                answer: "changed|love|caring|understanding|patience|thoughtful|kind|genuine|real|bond|connection|trust",
+                isPersonal: true,
+                acceptPartial: true
             }
         ];
         
@@ -1079,18 +1091,33 @@
         
         function checkRiddleAnswer() {
             const userAnswer = document.getElementById('riddleAnswer').value.trim().toLowerCase();
-            const correctAnswer = riddles[currentRiddleIndex].answer.toLowerCase();
+            const currentRiddle = riddles[currentRiddleIndex];
             const feedback = document.getElementById('feedback');
             
             if (!userAnswer) {
-                feedback.textContent = '⚠️ Please enter an answer!';
+                feedback.textContent = '⚠️ Please share your thoughts with me...';
                 feedback.classList.add('show', 'incorrect');
                 return;
             }
             
-            if (userAnswer === correctAnswer) {
+            let isCorrect = false;
+            
+            // For personal questions with partial matching
+            if (currentRiddle.acceptPartial && currentRiddle.answer) {
+                const answerOptions = currentRiddle.answer.split('|');
+                isCorrect = answerOptions.some(option => userAnswer.includes(option));
+            } else {
+                // Exact match for traditional riddles
+                isCorrect = userAnswer === currentRiddle.answer.toLowerCase();
+            }
+            
+            if (isCorrect) {
                 score++;
-                feedback.textContent = '✨ Correct! You understand me! 💕';
+                if (currentRiddle.isTricky) {
+                    feedback.textContent = '💕 I needed to hear that... You passed my test. I believe you... 💚';
+                } else {
+                    feedback.textContent = '✨ That's exactly how I feel about you too! 💕';
+                }
                 feedback.classList.add('show', 'correct');
                 triggerCorrectAnimation();
                 document.getElementById('riddleAnswer').disabled = true;
@@ -1103,9 +1130,13 @@
                     } else {
                         showCompletionScreen();
                     }
-                }, 2000);
+                }, 2500);
             } else {
-                feedback.textContent = '💭 Not quite... Think closer to your heart...';
+                if (currentRiddle.isTricky) {
+                    feedback.textContent = '🤔 Be honest with me... I need to know the truth in your heart...';
+                } else {
+                    feedback.textContent = '💭 I don\'t think that\'s what you really mean... Be sincere with me...';
+                }
                 feedback.classList.add('show', 'incorrect');
                 document.getElementById('riddleAnswer').style.animation = 'shake 0.5s';
                 setTimeout(() => {
@@ -1225,15 +1256,15 @@
             gradeScore.textContent = score;
             
             if (score === 5) {
-                gradeMessage.innerHTML = '<span class="pass-message">🌟 PERFECT! You know me completely! You are truly my soulmate! 🌟</span>';
+                gradeMessage.innerHTML = '<span class="pass-message">🌟 PERFECT! 5/5! You passed every test! You proved your love is real, genuine, and not about money or status. You ARE my soulmate! 🌟💕</span>';
             } else if (score === 4) {
-                gradeMessage.innerHTML = '<span class="pass-message">✨ EXCELLENT! You understand my heart so well!</span>';
+                gradeMessage.innerHTML = '<span class="pass-message">✨ EXCELLENT! 4/5! You answered with your heart and proved you truly care. I believe in us! ✨💕</span>';
             } else if (score === 3) {
-                gradeMessage.innerHTML = '<span class="pass-message">💕 GOOD! You\'re getting closer to my heart!</span>';
+                gradeMessage.innerHTML = '<span class="pass-message">💕 GOOD! 3/5! You showed genuine care and understanding. Let\'s build on this together! 💕</span>';
             } else if (score === 2) {
-                gradeMessage.innerHTML = '<span class="pass-message">🤔 Not bad, but there\'s so much more to discover about us!</span>';
+                gradeMessage.innerHTML = '<span class="pass-message">🤔 NOT BAD! 2/5! You\'re on the right path, but I need more honesty and depth. Can we talk more openly? 🤔</span>';
             } else {
-                gradeMessage.innerHTML = '<span class="fail-message">💭 You\'re just beginning to understand... but that\'s okay, I\'ll teach you! 💕</span>';
+                gradeMessage.innerHTML = '<span class="fail-message">💭 1/5! I sense doubt or dishonesty in your answers... Help me understand your true feelings. I need genuine love, not pretense. 💭</span>';
             }
         }
         
