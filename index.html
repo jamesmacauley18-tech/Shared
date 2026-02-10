@@ -1142,6 +1142,12 @@
         let senderName = 'James';
         let allAnswers = []; // Track all Q&A responses
         
+        // Audio management
+        let backgroundOscillator = null;
+        let backgroundGainNode = null;
+        let audioContext = null;
+        let isPlayingBackgroundMusic = false;
+        
         function loadSettings() {
             const settings = JSON.parse(localStorage.getItem('valentineSettings')) || {};
             if (settings.recipientName) {
@@ -1182,8 +1188,9 @@
                 score = 0;
                 currentRiddleIndex = 0;
                 allAnswers = []; // Reset answers
+                startBackgroundMusic(); // Start romantic background music
                 loadRiddle();
-                console.log('Puzzle started successfully');
+                console.log('🎵 Puzzle started with background music');
             } catch(error) {
                 console.error('Error starting puzzle:', error);
                 alert('There was an error starting the puzzle. Please refresh the page and try again.');
@@ -1325,18 +1332,75 @@
         }
         
         // Sound Effect Functions
+        function startBackgroundMusic() {
+            // Start continuous background music during quiz
+            if (isPlayingBackgroundMusic) return;
+            
+            try {
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                
+                // Stop any previous music
+                stopBackgroundMusic();
+                
+                // Create oscillator for romantic background music
+                backgroundOscillator = audioContext.createOscillator();
+                backgroundGainNode = audioContext.createGain();
+                
+                backgroundOscillator.connect(backgroundGainNode);
+                backgroundGainNode.connect(audioContext.destination);
+                
+                // Use 432Hz (love frequency) for smooth romantic vibe
+                backgroundOscillator.frequency.value = 432;
+                backgroundOscillator.type = 'sine';
+                
+                // Soft volume so it doesn't overpower
+                backgroundGainNode.gain.setValueAtTime(0.08, audioContext.currentTime);
+                
+                backgroundOscillator.start(audioContext.currentTime);
+                isPlayingBackgroundMusic = true;
+                console.log('🎵 Background music started...');
+            } catch(e) {
+                console.log('Audio context error:', e);
+            }
+        }
+        
+        function stopBackgroundMusic() {
+            try {
+                if (backgroundOscillator && isPlayingBackgroundMusic) {
+                    // Fade out smoothly
+                    const currentTime = audioContext.currentTime;
+                    backgroundGainNode.gain.setValueAtTime(backgroundGainNode.gain.value, currentTime);
+                    backgroundGainNode.gain.exponentialRampToValueAtTime(0.001, currentTime + 1);
+                    
+                    backgroundOscillator.stop(currentTime + 1);
+                    isPlayingBackgroundMusic = false;
+                    console.log('🎵 Background music stopped...');
+                }
+            } catch(e) {
+                console.log('Error stopping music:', e);
+            }
+        }
+        
         function playSound(type) {
             // Create a simple beep sound using Web Audio API
             if (type === 'correct') {
                 playBeep(800, 0.1); // Higher pitch for correct
             } else if (type === 'kiss') {
                 playBeep(600, 0.15); // Romantic kiss sound
+            } else if (type === 'perfect') {
+                // Special perfect score sound - ascending notes
+                playPerfectSound();
             }
         }
         
         function playBeep(frequency, duration) {
             try {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                
                 const oscillator = audioContext.createOscillator();
                 const gainNode = audioContext.createGain();
                 
@@ -1351,6 +1415,40 @@
                 
                 oscillator.start(audioContext.currentTime);
                 oscillator.stop(audioContext.currentTime + duration);
+            } catch(e) {
+                console.log('Audio not available');
+            }
+        }
+        
+        function playPerfectSound() {
+            // Play ascending notes for perfect score (C-E-G chord progression)
+            try {
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                
+                const frequencies = [523.25, 659.25, 783.99]; // C, E, G notes
+                const currentTime = audioContext.currentTime;
+                
+                frequencies.forEach((freq, index) => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.value = freq;
+                    oscillator.type = 'sine';
+                    
+                    const startTime = currentTime + (index * 0.15);
+                    const duration = 0.4;
+                    
+                    gainNode.gain.setValueAtTime(0.4, startTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
+                    
+                    oscillator.start(startTime);
+                    oscillator.stop(startTime + duration);
+                });
             } catch(e) {
                 console.log('Audio not available');
             }
@@ -1474,6 +1572,7 @@
             gradeScore.textContent = score;
             
             if (score === 10) {
+                playSound('perfect'); // Play perfect score sound
                 gradeMessage.innerHTML = '<span class="pass-message">🌟 PERFECT! 10/10! You aced every single question! Your love is pure, genuine, and unwavering. You truly ARE my soulmate! I have no more doubts. 🌟💕</span>';
             } else if (score === 9) {
                 gradeMessage.innerHTML = '<span class="pass-message">✨ EXCELLENT! 9/10! You answered almost perfectly. Your love is real and deep. I trust you completely! ✨💕</span>';
@@ -1525,6 +1624,11 @@
             
             document.getElementById('secretMessage').classList.add('show');
             input.disabled = true;
+            
+            // Stop background music after secret is submitted
+            setTimeout(() => {
+                stopBackgroundMusic();
+            }, 1000);
         }
         
         function submitValentineWish() {
@@ -1558,6 +1662,11 @@
             
             document.getElementById('submissionMessage').classList.add('show');
             input.disabled = true;
+            
+            // Stop background music after wish is submitted (quiz complete)
+            setTimeout(() => {
+                stopBackgroundMusic();
+            }, 1000);
         }
         
         function goToAdmin() {
