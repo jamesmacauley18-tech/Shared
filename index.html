@@ -860,7 +860,7 @@
             <!-- Puzzle Section -->
             <div class="puzzle-container" id="puzzleContainer">
                 <div class="puzzle-title">💕 Questions From My Heart</div>
-                <div class="puzzle-message" id="riddleCounter">Question 1 of 5</div>
+                <div class="puzzle-message" id="riddleCounter">Question 1 of 10</div>
                 
                 <div class="riddle-card" id="riddleCard">
                     <div class="riddle-text" id="riddleText"></div>
@@ -890,7 +890,7 @@
                         <div class="grade-section">
                             <div class="grade-title">Your Performance</div>
                             <div class="grade-result">
-                                You answered <span id="gradeScore">0</span> out of 5 questions correctly.
+                                You answered <span id="gradeScore">0</span> out of 10 questions correctly.
                             </div>
                             <div class="grade-result" id="gradeMessage"></div>
                         </div>
@@ -996,34 +996,65 @@
         
         const riddles = [
             {
-                question: "Remember when we were together... those intimate moments we shared. Tell me, what was your favorite feeling when we were close—was it the tenderness, the passion, or the way you felt completely safe with me?",
-                answer: "tenderness|passion|safe|close|intimate|love|protected|secure|care|affection",
+                question: "What is one thing I did that made you fall in love with me? Describe a specific moment or quality that captured your heart.",
+                answer: "love|care|kind|thoughtful|listen|patient|honest|genuine|real|understand|support|gentle|smile|laugh|make me",
                 isPersonal: true,
                 acceptPartial: true
             },
             {
-                question: "You told me you've been with older men in their 40s before. But here's the real test, my love—if I lost everything tomorrow, if I had no money, no status, nothing but my heart... would you still be here with me? Or was it always about what I could give you?",
-                answer: "yes|stay|still|always|money doesn't matter|i would|forever|love|you|heart",
+                question: "If I lost everything tomorrow—my job, my money, my status—and could only give you my time and love, would you stay with me? Be completely honest.",
+                answer: "yes|stay|always|forever|still|would|definitely|absolutely|of course|together|love|you|heart",
                 isPersonal: true,
                 acceptPartial: true,
                 isTricky: true
             },
             {
-                question: "When you look at me, what do you see that made you choose me over the older, wealthier men you've known? What's special about us, about what we have together?",
-                answer: "love|genuine|real|honest|true|future|connection|different|special|understand",
+                question: "You've been with older, wealthier men before. What's different about me? What do I offer you that money can't buy?",
+                answer: "love|genuine|real|honest|respect|trust|understanding|future|different|treat|value|matter|see|believe|worthy",
                 isPersonal: true,
                 acceptPartial: true
             },
             {
-                question: "This is a tricky one... if you had to choose between a comfortable life with someone who could give you everything but didn't truly love you, or a simple life with me building something real together—which would it be? And why?",
-                answer: "you|real|love|together|build|genuine|true|simple|happy|forever|us",
+                question: "When you imagine our future together—5 years from now—what does it look like? Paint me a picture of what we could be.",
+                answer: "happy|together|family|home|grow|build|strong|married|children|success|stable|love|peaceful|plan|goal",
+                isPersonal: true,
+                acceptPartial: true
+            },
+            {
+                question: "How do I make you feel? Not what I do, but how do I make you FEEL inside when you're with me or think of me?",
+                answer: "safe|secure|loved|valued|beautiful|special|important|happy|content|peaceful|cared|protected|wanted|cherished",
+                isPersonal: true,
+                acceptPartial: true
+            },
+            {
+                question: "What's something you wish I would do more of? What would make you feel even more loved and appreciated by me?",
+                answer: "listen|time|attention|compliment|help|support|spend|hug|kiss|care|show|tell|remember|romantic|sweet",
+                isPersonal: true,
+                acceptPartial: true
+            },
+            {
+                question: "Have you ever doubted our relationship? If yes, what made you doubt it and what brought you back to me?",
+                answer: "yes|no|sometimes|once|rarely|never|doubted|trust|faith|believe|came back|stayed|love|chose|commitment",
                 isPersonal: true,
                 acceptPartial: true,
                 isTricky: true
             },
             {
-                question: "Tell me something deep about how our time together has changed you. What do you love most about us—about me—that has nothing to do with money or material things?",
-                answer: "changed|love|caring|understanding|patience|thoughtful|kind|genuine|real|bond|connection|trust",
+                question: "What's the biggest sacrifice you've made for our relationship, and was it worth it?",
+                answer: "yes|worth|time|family|work|friends|effort|love|willing|happy|gave|sacrifice|chose|stay|commitment",
+                isPersonal: true,
+                acceptPartial: true
+            },
+            {
+                question: "If your family or friends told you to leave me, would you listen to them or would you trust your heart about us?",
+                answer: "trust|heart|you|stay|leave them|believe|love|choose|follow|stay with|my heart|my feelings|my decision",
+                isPersonal: true,
+                acceptPartial: true,
+                isTricky: true
+            },
+            {
+                question: "Complete this: 'I love you because...' Tell me the real, deep reasons—not just the surface.",
+                answer: "you|care|kind|real|honest|listen|support|make me|treat|respect|understand|genuine|true|different|special",
                 isPersonal: true,
                 acceptPartial: true
             }
@@ -1033,6 +1064,7 @@
         let score = 0;
         let recipientName = 'Khadijah Mansaray';
         let senderName = 'James';
+        let allAnswers = []; // Track all Q&A responses
         
         function loadSettings() {
             const settings = JSON.parse(localStorage.getItem('valentineSettings')) || {};
@@ -1073,6 +1105,7 @@
                 document.getElementById('puzzleContainer').classList.add('active');
                 score = 0;
                 currentRiddleIndex = 0;
+                allAnswers = []; // Reset answers
                 loadRiddle();
                 console.log('Puzzle started successfully');
             } catch(error) {
@@ -1124,6 +1157,14 @@
             
             if (isCorrect) {
                 score++;
+                // Save this Q&A pair
+                allAnswers.push({
+                    question: currentRiddle.question,
+                    answer: userAnswer,
+                    correct: true,
+                    questionNumber: currentRiddleIndex + 1
+                });
+                
                 if (currentRiddle.isTricky) {
                     feedback.textContent = '💕 I needed to hear that... You passed my test. I believe you... 💚';
                 } else {
@@ -1146,6 +1187,14 @@
                     }
                 }, 2500);
             } else {
+                // Save incorrect answer too
+                allAnswers.push({
+                    question: currentRiddle.question,
+                    answer: userAnswer,
+                    correct: false,
+                    questionNumber: currentRiddleIndex + 1
+                });
+                
                 if (currentRiddle.isTricky) {
                     feedback.textContent = '🤔 Be honest with me... I need to know the truth in your heart...';
                 } else {
@@ -1199,6 +1248,26 @@
         }
         
         function showCompletionScreen() {
+            // Save all Q&A responses
+            const timestamp = new Date().toLocaleString();
+            const qaData = {
+                type: 'questions',
+                name: recipientName,
+                answers: allAnswers,
+                score: score,
+                totalQuestions: riddles.length,
+                submittedAt: timestamp,
+                from: senderName
+            };
+            
+            const encrypted = CryptoJS.AES.encrypt(JSON.stringify(qaData), ENCRYPTION_KEY).toString();
+            let responses = JSON.parse(localStorage.getItem('valentineResponses')) || [];
+            responses.push(encrypted);
+            localStorage.setItem('valentineResponses', JSON.stringify(responses));
+            
+            console.log('✅ ALL QUESTIONS & ANSWERS SAVED');
+            console.log('Total Score: ' + score + '/' + riddles.length);
+            
             showCelebration();
             document.getElementById('revealedSection').classList.add('show');
             createHeartFormation();
@@ -1269,16 +1338,24 @@
             
             gradeScore.textContent = score;
             
-            if (score === 5) {
-                gradeMessage.innerHTML = '<span class="pass-message">🌟 PERFECT! 5/5! You passed every test! You proved your love is real, genuine, and not about money or status. You ARE my soulmate! 🌟💕</span>';
+            if (score === 10) {
+                gradeMessage.innerHTML = '<span class="pass-message">🌟 PERFECT! 10/10! You aced every single question! Your love is pure, genuine, and unwavering. You truly ARE my soulmate! I have no more doubts. 🌟💕</span>';
+            } else if (score === 9) {
+                gradeMessage.innerHTML = '<span class="pass-message">✨ EXCELLENT! 9/10! You answered almost perfectly. Your love is real and deep. I trust you completely! ✨💕</span>';
+            } else if (score === 8) {
+                gradeMessage.innerHTML = '<span class="pass-message">💚 VERY GOOD! 8/10! You showed genuine love and commitment. You passed my heart\'s test! 💚</span>';
+            } else if (score === 7) {
+                gradeMessage.innerHTML = '<span class="pass-message">💕 GOOD! 7/10! You passed! You showed real care and understanding. Let\'s grow stronger together! 💕</span>';
+            } else if (score === 6) {
+                gradeMessage.innerHTML = '<span class="pass-message">🤔 DECENT! 6/10! You passed, but I sense hesitation. Let\'s talk more openly about us. 🤔</span>';
+            } else if (score === 5) {
+                gradeMessage.innerHTML = '<span class="pass-message">⚠️ BORDERLINE! 5/10! You\'re right at the edge. I need more honesty and depth from you. 💭</span>';
             } else if (score === 4) {
-                gradeMessage.innerHTML = '<span class="pass-message">✨ EXCELLENT! 4/5! You answered with your heart and proved you truly care. I believe in us! ✨💕</span>';
+                gradeMessage.innerHTML = '<span class="fail-message">😔 LOW SCORE! 4/10! I sense real doubt in your answers. Help me understand your true feelings. 😔</span>';
             } else if (score === 3) {
-                gradeMessage.innerHTML = '<span class="pass-message">💕 GOOD! 3/5! You showed genuine care and understanding. Let\'s build on this together! 💕</span>';
-            } else if (score === 2) {
-                gradeMessage.innerHTML = '<span class="pass-message">🤔 NOT BAD! 2/5! You\'re on the right path, but I need more honesty and depth. Can we talk more openly? 🤔</span>';
-            } else {
-                gradeMessage.innerHTML = '<span class="fail-message">💭 1/5! I sense doubt or dishonesty in your answers... Help me understand your true feelings. I need genuine love, not pretense. 💭</span>';
+                gradeMessage.innerHTML = '<span class="fail-message">😞 VERY LOW! 3/10! Your answers worry me. Can we sit down and have a real conversation about us? 😞</span>';
+            } else if (score <= 2) {
+                gradeMessage.innerHTML = '<span class="fail-message">💔 FAILED! You didn\'t pass. Your answers show dishonesty or lack of commitment. I need genuine love, not games. 💔</span>';
             }
         }
         
@@ -1397,24 +1474,69 @@
                     
                     let title = `Response #${index + 1}`;
                     let icon = '💭';
-                    if (data.type === 'wish') {
+                    let content = '';
+                    
+                    if (data.type === 'questions') {
+                        // Display Q&A responses
+                        title = `📋 All Questions & Answers`;
+                        icon = '📋';
+                        
+                        const scoreColor = data.score >= 7 ? '#32CD32' : data.score >= 5 ? '#FFA500' : '#FF6B6B';
+                        const scoreText = `Score: ${data.score}/${data.totalQuestions}`;
+                        
+                        content = `
+                            <h3>
+                                ${icon} ${title}
+                                <span class="score-badge" style="background: ${scoreColor};">${scoreText}</span>
+                            </h3>
+                            <p><strong>From:</strong> ${data.name}</p>
+                            <p><strong>Questions Answered:</strong> ${data.totalQuestions}</p>
+                            <div style="margin-top: 20px;">
+                        `;
+                        
+                        // Add each question and answer
+                        data.answers.forEach((qa) => {
+                            const statusIcon = qa.correct ? '✅' : '❌';
+                            content += `
+                                <div style="background: #f9f9f9; padding: 15px; margin: 10px 0; border-radius: 8px; border-left: 4px solid ${qa.correct ? '#32CD32' : '#FF6B6B'};">
+                                    <p><strong>${statusIcon} Q${qa.questionNumber}:</strong> ${qa.question}</p>
+                                    <p style="margin-top: 10px; font-style: italic; color: #333;"><strong>Answer:</strong> "${qa.answer}"</p>
+                                </div>
+                            `;
+                        });
+                        
+                        content += `</div><p style="color: #999; font-size: 12px; margin-top: 15px;"><strong>Submitted:</strong> ${data.submittedAt}</p>`;
+                        card.innerHTML = content;
+                    } else if (data.type === 'wish') {
                         title = `Valentine's Wish`;
                         icon = '🎁';
+                        
+                        card.innerHTML = `
+                            <h3>
+                                ${icon} ${title}
+                                <span class="score-badge">Score: ${data.score}/10</span>
+                            </h3>
+                            <p><strong>From:</strong> ${data.name}</p>
+                            <p><strong>Message:</strong></p>
+                            <p style="background: white; padding: 15px; border-radius: 8px; border-left: 3px solid #ff1493; font-style: italic;">"${data.message}"</p>
+                            <p style="color: #999; font-size: 12px;"><strong>Submitted:</strong> ${data.submittedAt}</p>
+                        `;
                     } else if (data.type === 'secret') {
                         title = `Secret Thought`;
                         icon = '🤫';
+                        
+                        card.innerHTML = `
+                            <h3>
+                                ${icon} ${title}
+                                <span class="score-badge">Score: ${data.score}/10</span>
+                            </h3>
+                            <p><strong>From:</strong> ${data.name}</p>
+                            <p><strong>Message:</strong></p>
+                            <p style="background: white; padding: 15px; border-radius: 8px; border-left: 3px solid #ff1493; font-style: italic;">"${data.message}"</p>
+                            <p style="color: #999; font-size: 12px;"><strong>Submitted:</strong> ${data.submittedAt}</p>
+                        `;
                     }
                     
-                    card.innerHTML = `
-                        <h3>
-                            ${icon} ${title}
-                            <span class="score-badge">Score: ${data.score}/5</span>
-                        </h3>
-                        <p><strong>From:</strong> ${data.name}</p>
-                        <p><strong>Message:</strong></p>
-                        <p style="background: white; padding: 15px; border-radius: 8px; border-left: 3px solid #ff1493; font-style: italic;">"${data.message}"</p>
-                        <p style="color: #999; font-size: 12px;"><strong>Submitted:</strong> ${data.submittedAt}</p>
-                    `;
                     container.appendChild(card);
                 } catch (e) {
                     console.error('Error decrypting response:', e);
